@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OldGen | Portal Oficial & Top Ranking PvP</title>
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Press+Start+2P&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Iconos Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-dark: #040307;
+            --bg-card-hover: rgba(25, 15, 40, 0.95);
+            --border-pink: #ff007f;
+            --border-glow: rgba(255, 0, 127, 0.5);
+            
+            /* Colores Neón PvP */
+            --pink-neon: #ff007f;
+            --pink-bright: #ff3399;
+            --pink-glow: rgba(255, 0, 127, 0.6);
+            --purple-dark: #12081f;
+            
+            --cyan-neon: #00f0ff;
+            --yellow-neon: #ffe600;
+            --green-neon: #00ff66;
+            
+            --text-main: #f8fafc;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* CANVAS DE PARTICULAS ROSAS */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .font-pixel {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .font-pvp {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* MARQUESINA ANIMADA ROSA PVP */
+        .marquee-wrapper {
+            background: #020104;
+            border-bottom: 2px solid var(--pink-neon);
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            padding: 0.5rem 0;
+            box-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .marquee-text {
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-right: 3rem;
+            text-transform: uppercase;
+            color: var(--pink-bright);
+            text-shadow: 0 0 10px var(--pink-neon);
+        }
+
+        /* HEADER / NAVBAR PVP */
+        .header {
+            background: rgba(8, 4, 15, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--pink-neon);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.8rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 25px rgba(255, 0, 127, 0.25);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.2rem;
+            color: #fff;
+            filter: drop-shadow(0 0 8px var(--pink-neon));
+        }
+
+        .logo span strong {
+            color: var(--pink-neon);
+            text-shadow: 0 0 15px var(--pink-neon);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .tab-btn {
+            background: rgba(255, 0, 127, 0.05);
+            border: 1px solid rgba(255, 0, 127, 0.2);
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.25s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            border-color: var(--pink-bright);
+            background: rgba(255, 0, 127, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .tab-btn.active {
+            background: var(--pink-neon);
+            color: #fff;
+            border-color: #fff;
+            box-shadow: 0 0 20px var(--pink-glow);
+            text-shadow: 0 0 5px #000;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .nav-btn-discord {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #5865f2;
+            color: #ffffff;
+            padding: 8px 18px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.6);
+            transition: all 0.25s ease-in-out;
+            border: none;
+        }
+
+        .nav-btn-discord svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .nav-btn-discord:hover {
+            background-color: #4752c4;
+            box-shadow: 0 0 25px rgba(88, 101, 242, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .admin-login-btn {
+            background: #000;
+            border: 2px solid var(--pink-neon);
+            color: var(--pink-neon);
+            padding: 0.6rem 1rem;
+            font-size: 0.7rem;
+            font-weight: 900;
+            cursor: pointer;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+        }
+
+        .admin-login-btn:hover {
+            background: var(--pink-neon);
+            color: #000;
+            box-shadow: 0 0 25px var(--pink-neon);
+            transform: translateY(-2px);
+        }
+
+        /* CONTENIDO PRINCIPAL */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HERO CYBER PVP BANNER */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: radial-gradient(circle, rgba(255,0,127,0.25) 0%, rgba(10,5,20,0.95) 85%);
+            border: 2px solid var(--pink-neon);
+            position: relative;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 0 35px var(--pink-glow), inset 0 0 25px rgba(255,0,127,0.2);
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+        }
+
+        .hero::before {
+            content: 'CLAN PVP';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            color: var(--pink-neon);
+            opacity: 0.6;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 0 0 20px var(--pink-neon), 3px 3px 0px #000;
+            letter-spacing: 3px;
+        }
+
+        .hero p {
+            color: #d1d5db;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        /* SECCIONES Y CARDS */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 1.8rem;
+            border-bottom: 2px solid var(--pink-neon);
+            padding-bottom: 0.6rem;
+            text-shadow: 0 0 10px var(--pink-glow);
+        }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 0, 127, 0.4);
+            padding: 1.6rem;
+            position: relative;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        }
+
+        .post-card:hover {
+            border-color: var(--pink-neon);
+            box-shadow: 0 0 25px var(--pink-glow);
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+        }
+
+        .post-card .type-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 0.3rem 0.7rem;
+            background: rgba(255, 0, 127, 0.2);
+            color: var(--pink-bright);
+            border: 1px solid var(--pink-neon);
+            margin-bottom: 0.9rem;
+            font-weight: 900;
+            align-self: flex-start;
+            letter-spacing: 1px;
+        }
+
+        .post-card img.post-img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            margin-bottom: 0.9rem;
+            border: 1px solid var(--pink-neon);
+            box-shadow: 0 0 10px rgba(255,0,127,0.3);
+        }
+
+        .post-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .post-card p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .post-card .date {
+            font-size: 0.75rem;
+            color: var(--pink-bright);
+            margin-top: 1.2rem;
+            display: block;
+            font-weight: bold;
+        }
+
+        /* FILTROS DE BÚSQUEDA PARA ROSTER */
+        .filter-container {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 0, 127, 0.3);
+            color: var(--text-muted);
+            padding: 0.5rem 1.1rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--pink-neon);
+            color: #fff;
+            box-shadow: 0 0 12px var(--pink-glow);
+        }
+
+        .filter-btn.active {
+            background: var(--pink-neon);
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        /* ROSTER DE JUGADORES */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .player-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 0, 127, 0.3);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            position: relative;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        }
+
+        .player-card:hover {
+            border-color: var(--pink-neon);
+            box-shadow: 0 0 25px var(--pink-glow);
+            transform: translateY(-5px);
+            background: var(--bg-card-hover);
+        }
+
+        .player-head {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            background: #000;
+            border: 2px solid var(--pink-neon);
+            margin: 0 auto 0.9rem;
+            box-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        .player-name {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+        }
+
+        .player-role {
+            font-size: 0.75rem;
+            color: var(--pink-bright);
+            font-weight: 900;
+            background: rgba(255, 0, 127, 0.15);
+            padding: 0.3rem 0.6rem;
+            display: inline-block;
+            border: 1px solid var(--pink-neon);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .click-hint {
+            font-size: 0.7rem;
+            color: var(--pink-bright);
+            margin-top: 0.8rem;
+            display: block;
+            font-weight: bold;
+        }
+
+        /* TOP RANKING PVP PRO */
+        .ranking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .rank-card-pro {
+            background: linear-gradient(145deg, #10081c, #05020a);
+            border: 2px solid var(--border-pink);
+            padding: 2.2rem 1.5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,0,127,0.15);
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        }
+
+        .rank-card-pro.tier-1 {
+            border-color: var(--yellow-neon);
+            box-shadow: 0 0 30px rgba(255, 230, 0, 0.25);
+        }
+        .rank-card-pro.tier-2 {
+            border-color: var(--cyan-neon);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+        }
+
+        .rank-card-pro:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #fff;
+            box-shadow: 0 0 40px var(--pink-glow);
+        }
+
+        .rank-badges-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            top: 12px;
+            left: 0;
+            padding: 0 15px;
+        }
+
+        .rank-badge-pro {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.65rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+        }
+
+        .tier-badge-pro {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.65rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--cyan-neon);
+            border: 1px solid var(--cyan-neon);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .badge-1 { background: var(--yellow-neon); color: #000; box-shadow: 0 0 15px rgba(255,230,0,0.8); }
+        .badge-2 { background: var(--cyan-neon); color: #000; box-shadow: 0 0 15px rgba(0,240,255,0.8); }
+        .badge-3 { background: var(--pink-neon); color: #fff; box-shadow: 0 0 15px var(--pink-glow); }
+        .badge-other { background: rgba(255,255,255,0.15); color: #fff; }
+
+        .rank-avatar-container {
+            width: 130px;
+            height: 180px;
+            margin: 1.5rem auto 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rank-full-skin {
+            max-height: 180px;
+            max-width: 130px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px var(--pink-neon));
+            transition: transform 0.3s ease;
+        }
+
+        .rank-card-pro:hover .rank-full-skin {
+            transform: scale(1.1) translateY(-4px);
+        }
+
+        .rank-card-pro h3 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* REGLAS */
+        .rules-list {
+            background: var(--bg-card);
+            border: 1px solid var(--pink-neon);
+            padding: 2rem;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            box-shadow: 0 0 20px var(--pink-glow);
+        }
+
+        .rules-list li {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            font-size: 1.05rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .rules-list li span {
+            color: var(--pink-bright);
+            font-weight: 900;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px var(--pink-glow);
+        }
+
+        /* MODALES */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            padding: 1rem;
+        }
+
+        .modal-box {
+            background: #08040f;
+            border: 2px solid var(--pink-neon);
+            box-shadow: 0 0 40px var(--pink-glow);
+            padding: 2.2rem;
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-close:hover { color: var(--pink-neon); }
+
+        .skin-modal-body {
+            text-align: center;
+            padding: 0.5rem 0;
+        }
+
+        .full-skin-img {
+            max-height: 220px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px var(--pink-neon));
+            margin-bottom: 1rem;
+        }
+
+        .player-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .detail-box, .detail-box-full {
+            background: rgba(255, 0, 127, 0.08);
+            border: 1px solid rgba(255, 0, 127, 0.3);
+            padding: 0.8rem;
+        }
+
+        .detail-box-full {
+            grid-column: span 2;
+        }
+
+        .detail-box label, .detail-box-full label {
+            font-size: 0.65rem;
+            color: var(--pink-bright);
+            display: block;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+        }
+
+        .detail-box span, .detail-box-full span {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .social-links-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 1.2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0d0617;
+            transition: all 0.25s ease-in-out;
+            cursor: pointer;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+        }
+
+        .social-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .social-tiktok { color: #fff; border: 1px solid #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
+        .social-tiktok:hover { background-color: rgba(0, 242, 254, 0.2); }
+
+        .social-instagram { color: #ffb700; border: 1px solid var(--pink-neon); box-shadow: 0 0 10px var(--pink-glow); }
+        .social-instagram:hover { background-color: rgba(255, 0, 127, 0.2); }
+
+        .social-youtube { color: #fff; border: 1px solid #ff2a2a; box-shadow: 0 0 10px rgba(255, 42, 42, 0.3); }
+        .social-youtube:hover { background-color: rgba(255, 42, 42, 0.2); }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--pink-bright);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            background: #020105;
+            border: 1px solid rgba(255, 0, 127, 0.4);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--pink-neon);
+            box-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--pink-neon);
+            color: #fff;
+            border: none;
+            padding: 0.85rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 0 20px var(--pink-glow);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+
+        .btn-action:hover {
+            opacity: 0.95;
+            box-shadow: 0 0 30px var(--pink-neon);
+        }
+
+        .btn-delete {
+            background: #ff0055;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 0 10px rgba(255,0,85,0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        @media (max-width: 820px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CANVAS PARA BOLITAS ROSAS EN MOVIMIENTO -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- BANNER ANIMADO DE MARQUESINA ROSA -->
+    <div class="marquee-wrapper font-pixel">
+        <div class="marquee-content" id="marqueeContainer"></div>
+    </div>
+
+    <!-- HEADER / NAVBAR -->
+    <header class="header">
+        <div class="logo font-pixel">
+            <i data-lucide="shield" style="color: var(--pink-neon);"></i>
+            <span>Old<strong>Gen</strong></span>
+        </div>
+
+        <nav>
+            <ul class="nav-tabs">
+                <li><button class="tab-btn active" onclick="switchTab('tab-inicio', this)"><i data-lucide="home"></i> INICIO</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-ranking', this)"><i data-lucide="award"></i> TOP RANKING</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-roster', this)"><i data-lucide="users"></i> ROSTER</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-wars', this)"><i data-lucide="swords"></i> CLAN WARS</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-reglas', this)"><i data-lucide="scroll"></i> REGLAS</button></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <a href="https://discord.gg" target="_blank" class="nav-btn-discord">
+                <svg viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.68 1.76 1.36 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15zM42.45 65.69c-6.58 0-12-6.04-12-13.43s5.3-13.43 12-13.43c6.73 0 12.05 6.09 12 13.43 0 7.39-5.3 13.43-12 13.43zm42.24 0c-6.58 0-12-6.04-12-13.43s5.3-13.43 12-13.43c6.73 0 12.05 6.09 12 13.43 0 7.39-5.32 13.43-12 13.43z"/></svg>
+                <span>DISCORD</span>
+            </a>
+            <button class="admin-login-btn font-pvp" onclick="openAdminModal()">
+                <i data-lucide="lock" style="width: 14px;"></i> ADMIN
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container">
+
+        <!-- TAB: INICIO -->
+        <section id="tab-inicio" class="tab-content active">
+            <div class="hero">
+                <h1 class="font-pixel">Old<span style="color: var(--pink-neon);">Gen</span></h1>
+                <p>Clan oficial del clan competitivo OldGen. Noticias, convocatorias, Clan Wars y ranking de jugadores en tiempo real.</p>
+            </div>
+
+            <div class="section-header font-pvp">
+                <i data-lucide="megaphone" style="color: var(--pink-neon);"></i>
+                <h2>TABLÓN DE ANUNCIOS & PUBLICACIONES</h2>
+            </div>
+
+            <div class="post-grid" id="postsContainer"></div>
+        </section>
+
+        <!-- TAB: TOP RANKING PVP -->
+        <section id="tab-ranking" class="tab-content">
+            <div class="section-header font-pvp">
+                <i data-lucide="crown" style="color: var(--yellow-neon);"></i>
+                <h2>TOP RANKING PVP COMPETITIVO</h2>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 1.8rem; font-size: 1rem; font-weight: 600;">Los mejores combatientes del clan. Haz clic sobre cualquier tarjeta para ver su perfil e historial.</p>
+            <div class="ranking-grid" id="rankingContainer"></div>
+        </section>
+
+        <!-- TAB: ROSTER -->
+        <section id="tab-roster" class="tab-content">
+            <div class="section-header font-pvp">
+                <i data-lucide="users" style="color: var(--pink-neon);"></i>
+                <h2>ROSTER OFICIAL DE JUGADORES</h2>
+            </div>
+            
+            <div class="filter-container font-pvp" id="filterContainer">
+                <button class="filter-btn active" onclick="filterRoster('todos', this)">TODOS</button>
+                <button class="filter-btn" onclick="filterRoster('lider', this)">LÍDER</button>
+                <button class="filter-btn" onclick="filterRoster('staff', this)">STAFF</button>
+                <button class="filter-btn" onclick="filterRoster('guerrero', this)">GUERRERO</button>
+                <button class="filter-btn" onclick="filterRoster('builder', this)">BUILDER</button>
+                <button class="filter-btn" onclick="filterRoster('farmer', this)">FARMER</button>
+            </div>
+
+            <p style="color: var(--text-muted); margin-bottom: 1.8rem; font-size: 1rem; font-weight: 600;">Selecciona un miembro para inspeccionar sus datos y redes sociales.</p>
+            <div class="roster-grid" id="rosterContainer"></div>
+        </section>
+
+        <!-- TAB: CLAN WARS -->
+        <section id="tab-wars" class="tab-content">
+            <div class="section-header font-pvp">
+                <i data-lucide="swords" style="color: var(--pink-neon);"></i>
+                <h2>HISTORIAL DE CLAN WARS</h2>
+            </div>
+            <div class="post-grid" id="warsContainer"></div>
+        </section>
+
+        <!-- TAB: REGLAS -->
+        <section id="tab-reglas" class="tab-content">
+            <div class="section-header font-pvp">
+                <i data-lucide="shield-alert" style="color: var(--pink-neon);"></i>
+                <h2>REGLAMENTO DEL CLAN</h2>
+            </div>
+            <ul class="rules-list">
+                <li><span>[01]</span> Respeto absoluto hacia todos los integrantes del clan y mandos oficiales.</li>
+                <li><span>[02]</span> Asistencia prioritaria a convocatorias de Clan Wars e instrucción táctica.</li>
+                <li><span>[03]</span> Cero tolerancia al uso de clientes modificados no permitidos o ventajas ilegales.</li>
+                <li><span>[04]</span> Comunicación limpia y obligatoria por voz en llamadas durante enfrentamientos.</li>
+                <li><span>[05]</span> Confidencialidad sobre alineaciones, tácticas e información interna.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <!-- MODAL DE PERFIL DE JUGADOR -->
+    <div class="modal-overlay" id="modalSkinView">
+        <div class="modal-box" style="text-align: center;">
+            <button class="modal-close" onclick="closeModal('modalSkinView')"><i data-lucide="x"></i></button>
+            <span class="type-badge font-pvp" id="skinModalRole">JUGADOR</span>
+            
+            <div class="skin-modal-body">
+                <h2 class="font-pvp" id="skinModalName" style="color: #fff; margin: 0.5rem 0 1rem; font-size: 1.5rem;">PLAYER</h2>
+                
+                <img id="skinModalImg" src="" class="full-skin-img" alt="Skin del Jugador">
+
+                <div class="player-details-grid">
+                    <div class="detail-box">
+                        <label>País / Region</label>
+                        <span id="modalCountry">PERÚ</span>
+                    </div>
+                    <div class="detail-box">
+                        <label>Tier PvP</label>
+                        <span id="modalTier" style="color: var(--yellow-neon);">NethPot</span>
+                    </div>
+                    <div class="detail-box">
+                        <label>Fecha Ingreso</label>
+                        <span id="modalJoinDate" style="color: var(--green-neon);">01/01/2026</span>
+                    </div>
+                    <div class="detail-box">
+                        <label>Estado</label>
+                        <span style="color: var(--pink-neon);">Activo</span>
+                    </div>
+                    <div class="detail-box-full">
+                        <label>Biografía / Notas</label>
+                        <span id="modalDescription" style="color: #ddd; font-weight: 500;">Sin descripción...</span>
+                    </div>
+                </div>
+
+                <div class="social-links-container" id="modalSocialLinks"></div>
+            </div>
+
+            <button class="btn-action font-pvp" onclick="closeModal('modalSkinView')">CERRAR PERFIL</button>
+        </div>
+    </div>
+
+    <!-- MODAL 1: LOGIN ADMIN -->
+    <div class="modal-overlay" id="modalAuth">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('modalAuth')"><i data-lucide="x"></i></button>
+            <h3 class="font-pvp" style="color: var(--pink-neon); margin-bottom: 1.2rem; font-size: 1rem;">AUTENTICACIÓN ADMIN</h3>
+            <div class="form-group">
+                <label>Contraseña Administrador</label>
+                <input type="password" id="adminPassword" class="form-control" placeholder="Ingresa clave...">
+            </div>
+            <button class="btn-action font-pvp" onclick="verifyAdmin()">ENTRAR AL PANEL</button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PANEL ADMIN COMPLETO -->
+    <div class="modal-overlay" id="modalAdminPanel">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('modalAdminPanel')"><i data-lucide="x"></i></button>
+            <h3 class="font-pvp" style="color: var(--pink-neon); margin-bottom: 1.5rem; font-size: 1rem;">PANEL DE CONTROL</h3>
+            
+            <!-- 1. MARQUESINA -->
+            <div style="border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.8rem;">1. ACTUALIZAR MARQUESINA</h4>
+                <div class="form-group">
+                    <label>Texto (separa frases con | )</label>
+                    <input type="text" id="marqueeInput" class="form-control">
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem;" onclick="saveMarquee()">GUARDAR MARQUESINA</button>
+            </div>
+
+            <!-- 2. PUBLICAR ANUNCIO -->
+            <div style="border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.8rem;">2. NUEVO ANUNCIO</h4>
+                <div class="form-group">
+                    <label>Título del Anuncio</label>
+                    <input type="text" id="postTitle" class="form-control" placeholder="Ej: RECLUTAMIENTO ABIERTO">
+                </div>
+                <div class="form-group">
+                    <label>Etiqueta / Tipo</label>
+                    <input type="text" id="postTag" class="form-control" placeholder="Ej: ANUNCIO">
+                </div>
+                <div class="form-group">
+                    <label>Imagen Adjunta (Opcional)</label>
+                    <input type="file" id="postImageInput" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>Contenido</label>
+                    <textarea id="postBody" class="form-control" rows="2" placeholder="Mensaje..."></textarea>
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem;" onclick="publishContent()">PUBLICAR</button>
+            </div>
+
+            <!-- 3. PUBLICAR CLAN WAR -->
+            <div style="border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.8rem;">3. REGISTRAR CLAN WAR</h4>
+                <div class="form-group">
+                    <label>Enfrentamiento</label>
+                    <input type="text" id="warTitle" class="form-control" placeholder="Ej: OldGen vs Team PvP">
+                </div>
+                <div class="form-group">
+                    <label>Resultado</label>
+                    <input type="text" id="warBadge" class="form-control" placeholder="Ej: VICTORIA (3 - 0)">
+                </div>
+                <div class="form-group">
+                    <label>Detalles del combate</label>
+                    <textarea id="warDetails" class="form-control" rows="2" placeholder="Resumen..."></textarea>
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem; background: var(--green-neon); color: #000;" onclick="addWar()">REGISTRAR COMBATE</button>
+            </div>
+
+            <!-- 4. AGREGAR JUGADOR AL ROSTER -->
+            <div style="border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.8rem;">4. AGREGAR MIEMBRO AL ROSTER</h4>
+                <div class="form-group">
+                    <label>Nick / Nombre de Minecraft</label>
+                    <input type="text" id="memberName" class="form-control" placeholder="Ej: Black_All">
+                </div>
+                <div class="form-group">
+                    <label>Rol en el Clan</label>
+                    <input type="text" id="memberRole" class="form-control" placeholder="Ej: LIDER, Staff, Guerrero">
+                </div>
+                <div class="form-group">
+                    <label>Link Foto Personal (Opcional - solo Roster)</label>
+                    <input type="text" id="memberImgUrl" class="form-control" placeholder="URL de la imagen (https://...)">
+                </div>
+                <div class="form-group">
+                    <label>País</label>
+                    <input type="text" id="memberCountry" class="form-control" placeholder="Ej: Perú, México">
+                </div>
+                <div class="form-group">
+                    <label>Tier PvP</label>
+                    <input type="text" id="memberTier" class="form-control" placeholder="Ej: HT4/LT3, NethPot">
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Ingreso</label>
+                    <input type="text" id="memberJoinDate" class="form-control" placeholder="Ej: Enero 2026">
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="memberDescription" class="form-control" rows="2" placeholder="Notas..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="color: #00f2fe;">TikTok URL</label>
+                    <input type="text" id="memberTikTok" class="form-control" placeholder="https://tiktok.com/@...">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--pink-bright);">Instagram URL</label>
+                    <input type="text" id="memberInstagram" class="form-control" placeholder="https://instagram.com/...">
+                </div>
+                <div class="form-group">
+                    <label style="color: #ff2a2a;">YouTube URL</label>
+                    <input type="text" id="memberYouTube" class="form-control" placeholder="https://youtube.com/@...">
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem;" onclick="addMember()">AGREGAR AL ROSTER</button>
+            </div>
+
+            <!-- 5. TOP RANKING PVP -->
+            <div>
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: var(--yellow-neon); margin-bottom: 0.8rem;">5. ASIGNAR A TOP RANKING PVP</h4>
+                <div class="form-group">
+                    <label>Seleccionar Miembro</label>
+                    <select id="rankingMemberSelect" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label>Posición en el Top (Ej: 1, 2, 3)</label>
+                    <input type="number" id="rankingPosition" class="form-control" placeholder="Ej: 1">
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem; background: var(--yellow-neon); color: #000;" onclick="assignRanking()">ASIGNAR A TOP RANKING</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- SONIDOS AUDIO API ---
+        const clickAudio = new Audio('/static/clik.mp3');
+        let audioCtx = null;
+
+        function playSynthClick() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.04);
+                
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.04);
+            } catch (e) {}
+        }
+
+        function playClickSound() {
+            clickAudio.currentTime = 0;
+            const playPromise = clickAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => playSynthClick());
+            }
+        }
+
+        // --- CANVAS PARTICULAS NEÓN ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.alpha = Math.random() * 0.7 + 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 0, 127, ${this.alpha})`;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = '#ff007f';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const particles = [];
+        for (let i = 0; i < 75; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- DATOS LOCALSTORAGE ---
+        let marqueeItems = JSON.parse(localStorage.getItem('oldgen_marquee')) || [
+            "★ CLAN OLDGEN PVP ★",
+            "⚡ RECLUTAMIENTO ACTIVO VÍA DISCORD ⚡",
+            "⚔ DOMINANDO EL TOP RANKING PVP ⚔"
+        ];
+
+        let postsData = JSON.parse(localStorage.getItem('oldgen_posts')) || [
+            { id: 1, tag: "ANUNCIO", title: "POSTULACIONES ABIERTAS", content: "Únete a nuestro Discord oficial para pasar la prueba de ingreso.", date: "20/09/2026", image: null },
+            { id: 2, tag: "COMUNICADO", title: "Portal Oficial OldGen", content: "Bienvenidos al nuevo sitio web oficial con diseño Cyber-PvP.", date: "Hoy", image: null }
+        ];
+
+        let warsData = JSON.parse(localStorage.getItem('oldgen_wars')) || [
+            { id: 1, title: "OldGen vs Rival PvP", badge: "VICTORIA (5 - 1)", details: "Dominio táctico en la arena principal.", date: "Reciente" }
+        ];
+
+        let rosterData = JSON.parse(localStorage.getItem('oldgen_roster')) || [
+            { id: 1, name: "Black_All", role: "LIDER", country: "Perú", tier: "HT4/LT3", joinDate: "Enero 2025", description: "Líder y estratega principal del clan OldGen.", rank: 1, imgUrl: "", tiktok: "https://tiktok.com", instagram: "https://instagram.com", youtube: "https://youtube.com" },
+            { id: 2, name: "sneijderbk147", role: "Builder", country: "Argentina", tier: "Sword", joinDate: "Mayo 2025", description: "Diseñador de defensas y estructuras del clan.", rank: 2, imgUrl: "", tiktok: "", instagram: "", youtube: "" },
+            { id: 3, name: "Jugador123454", role: "Farmer", country: "México", tier: "NethPot", joinDate: "Marzo 2026", description: "Especialista en logística e inventario.", rank: 3, imgUrl: "", tiktok: "", instagram: "", youtube: "" }
+        ];
+
+        let currentFilter = 'todos';
+        let isAdmin = false;
+
+        function switchTab(tabId, element) {
+            playClickSound();
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        function renderMarquee() {
+            const container = document.getElementById('marqueeContainer');
+            let html = '';
+            [...marqueeItems, ...marqueeItems].forEach((item) => {
+                html += `<span class="marquee-text">${item}</span>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = '';
+            postsData.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <span class="type-badge font-pvp">${post.tag}</span>
+                    ${post.image ? `<img src="${post.image}" class="post-img">` : ''}
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                    <span class="date font-pvp">FECHA: ${post.date}</span>
+                    ${isAdmin ? `<button class="btn-delete font-pvp" onclick="deletePost(${post.id})">ELIMINAR</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderWars() {
+            const container = document.getElementById('warsContainer');
+            container.innerHTML = '';
+            warsData.forEach(war => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <span class="type-badge font-pvp">${war.badge}</span>
+                    <h3>${war.title}</h3>
+                    <p>${war.details}</p>
+                    <span class="date font-pvp">FECHA: ${war.date}</span>
+                    ${isAdmin ? `<button class="btn-delete font-pvp" onclick="deleteWar(${war.id})">ELIMINAR</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterRoster(category, element) {
+            playClickSound();
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            renderRoster();
+        }
+
+        function renderRoster() {
+            const container = document.getElementById('rosterContainer');
+            container.innerHTML = '';
+
+            const filteredPlayers = rosterData.filter(player => {
+                if (currentFilter === 'todos') return true;
+                return player.role.toLowerCase().includes(currentFilter);
+            });
+
+            filteredPlayers.forEach(player => {
+                const imgDisplay = (player.imgUrl && player.imgUrl.trim() !== '') 
+                    ? player.imgUrl 
+                    : `https://minotar.net/avatar/${encodeURIComponent(player.name)}/100.png`;
+
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.onclick = () => {
+                    playClickSound();
+                    openSkinModal(
+                        player.name, 
+                        player.role, 
+                        `https://minotar.net/armor/body/${encodeURIComponent(player.name)}/200.png`, 
+                        player.country || 'Global', 
+                        player.tier || 'NethPot', 
+                        player.joinDate || 'Desconocido', 
+                        player.description || 'Sin descripción.',
+                        player.tiktok || '',
+                        player.instagram || '',
+                        player.youtube || ''
+                    );
+                };
+                
+                card.innerHTML = `
+                    <img class="player-head" src="${imgDisplay}" alt="${player.name}">
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-role">${player.role}</div>
+                    <span class="click-hint font-pvp">VER PERFIL ▲</span>
+                    ${isAdmin ? `<br><button class="btn-delete font-pvp" onclick="event.stopPropagation(); deleteMember(${player.id})">ELIMINAR</button>` : ''}
+                `;
+                container.appendChild(card);
+            });
+
+            updateRankingSelect();
+        }
+
+        function renderRanking() {
+            const container = document.getElementById('rankingContainer');
+            container.innerHTML = '';
+
+            const rankedPlayers = rosterData
+                .filter(p => p.rank !== null && p.rank !== undefined && p.rank !== '')
+                .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+
+            rankedPlayers.forEach(player => {
+                const r = parseInt(player.rank);
+                let tierClass = '';
+                let badgeClass = 'badge-other';
+                let rankLabel = `#${r} PVP`;
+
+                if (r === 1) { tierClass = 'tier-1'; badgeClass = 'badge-1'; rankLabel = '👑 TOP #1'; }
+                else if (r === 2) { tierClass = 'tier-2'; badgeClass = 'badge-2'; rankLabel = '⚔ TOP #2'; }
+                else if (r === 3) { tierClass = 'tier-3'; badgeClass = 'badge-3'; rankLabel = '🛡 TOP #3'; }
+
+                const playerTier = player.tier ? player.tier.toUpperCase() : 'NETHPOT';
+                const skinFull2D = `https://minotar.net/armor/body/${encodeURIComponent(player.name)}/220.png`;
+
+                const card = document.createElement('div');
+                card.className = `rank-card-pro ${tierClass}`;
+                card.onclick = () => {
+                    playClickSound();
+                    openSkinModal(
+                        player.name, 
+                        `${rankLabel} - ${player.role}`, 
+                        skinFull2D, 
+                        player.country || 'Global', 
+                        player.tier || 'NethPot', 
+                        player.joinDate || 'Desconocido', 
+                        player.description || 'Sin descripción.',
+                        player.tiktok || '',
+                        player.instagram || '',
+                        player.youtube || ''
+                    );
+                };
+
+                card.innerHTML = `
+                    <div class="rank-badges-top">
+                        <div class="rank-badge-pro ${badgeClass}">${rankLabel}</div>
+                        <div class="tier-badge-pro">⚡ ${playerTier}</div>
+                    </div>
+                    <div class="rank-avatar-container">
+                        <img class="rank-full-skin" src="${skinFull2D}" alt="${player.name}">
+                    </div>
+                    <h3>${player.name}</h3>
+                    <div class="player-role">${player.role}</div>
+                    <span class="click-hint font-pvp" style="margin-top: 1rem;">VER DETALLES ▲</span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateRankingSelect() {
+            const select = document.getElementById('rankingMemberSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            rosterData.forEach(player => {
+                const opt = document.createElement('option');
+                opt.value = player.id;
+                opt.textContent = `${player.name} (${player.role})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function openSkinModal(name, role, imgSrc, country, tier, joinDate, description, tiktok, instagram, youtube) {
+            document.getElementById('skinModalName').innerText = name;
+            document.getElementById('skinModalRole').innerText = role;
+            document.getElementById('skinModalImg').src = imgSrc;
+            document.getElementById('modalCountry').innerText = country;
+            document.getElementById('modalTier').innerText = tier;
+            document.getElementById('modalJoinDate').innerText = joinDate;
+            document.getElementById('modalDescription').innerText = description;
+
+            const socialContainer = document.getElementById('modalSocialLinks');
+            socialContainer.innerHTML = '';
+
+            if (tiktok) {
+                socialContainer.innerHTML += `
+                    <a href="${tiktok}" target="_blank" onclick="playClickSound()" class="social-btn social-tiktok">
+                        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25V349.38A162.55 162.55 0 1 1 185 188.31V258.2a93.62 93.62 0 1 0 58.28 87.19V0h69.4a140.39 140.39 0 0 0 83.32 83.32v69.4a209.11 209.11 0 0 1-48-22.81z"/></svg>
+                        <span>TikTok</span>
+                    </a>`;
+            }
+            if (instagram) {
+                socialContainer.innerHTML += `
+                    <a href="${instagram}" target="_blank" onclick="playClickSound()" class="social-btn social-instagram">
+                        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M224.1 141.1c-45.6 0-82.5 36.9-82.5 82.5s36.9 82.5 82.5 82.5 82.5-36.9 82.5-82.5-36.9-82.5-82.5-82.5zm0 136c-29.5 0-53.5-24-53.5-53.5s24-53.5 53.5-53.5 53.5 24 53.5 53.5-24 53.5-53.5 53.5zm123.4-138.8c0 10.6-8.6 19.2-19.2 19.2s-19.2-8.6-19.2-19.2 8.6-19.2 19.2-19.2 19.2 8.6 19.2 19.2zm73.9 19.3c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                        <span>Instagram</span>
+                    </a>`;
+            }
+            if (youtube) {
+                socialContainer.innerHTML += `
+                    <a href="${youtube}" target="_blank" onclick="playClickSound()" class="social-btn social-youtube">
+                        <svg viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+                        <span>YouTube</span>
+                    </a>`;
+            }
+            lucide.createIcons();
+            document.getElementById('modalSkinView').style.display = 'flex';
+        }
+
+        function openAdminModal() {
+            playClickSound();
+            if (isAdmin) {
+                document.getElementById('modalAdminPanel').style.display = 'flex';
+                document.getElementById('marqueeInput').value = marqueeItems.join(' | ');
+                updateRankingSelect();
+            } else {
+                document.getElementById('modalAuth').style.display = 'flex';
+            }
+        }
+
+        function closeModal(modalId) {
+            playClickSound();
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function verifyAdmin() {
+            playClickSound();
+            const pass = document.getElementById('adminPassword').value;
+            if (pass === 'NickyTeAmo') {
+                isAdmin = true;
+                closeModal('modalAuth');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('modalAdminPanel').style.display = 'flex';
+                document.getElementById('marqueeInput').value = marqueeItems.join(' | ');
+                renderPosts();
+                renderWars();
+                renderRoster();
+                renderRanking();
+            } else {
+                alert('SOLO ADMINISTRADORES');
+            }
+        }
+
+        function saveMarquee() {
+            playClickSound();
+            const val = document.getElementById('marqueeInput').value.trim();
+            if (!val) return;
+            marqueeItems = val.split('|').map(item => item.trim()).filter(Boolean);
+            localStorage.setItem('oldgen_marquee', JSON.stringify(marqueeItems));
+            renderMarquee();
+            closeModal('modalAdminPanel');
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve) => {
+                if (!file) resolve(null);
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => resolve(null);
+            });
+        }
+
+        async function publishContent() {
+            playClickSound();
+            const title = document.getElementById('postTitle').value.trim();
+            const tag = document.getElementById('postTag').value.trim() || 'ANUNCIO';
+            const content = document.getElementById('postBody').value.trim();
+            const imageFile = document.getElementById('postImageInput').files[0];
+
+            if (!title || !content) return alert('Ingresa título y contenido');
+            const imageBase64 = await fileToBase64(imageFile);
+
+            postsData.unshift({ id: Date.now(), title, tag: tag.toUpperCase(), content, date: new Date().toLocaleDateString(), image: imageBase64 });
+            localStorage.setItem('oldgen_posts', JSON.stringify(postsData));
+
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postTag').value = '';
+            document.getElementById('postBody').value = '';
+            document.getElementById('postImageInput').value = '';
+            closeModal('modalAdminPanel');
+            renderPosts();
+        }
+
+        function addWar() {
+            playClickSound();
+            const title = document.getElementById('warTitle').value.trim();
+            const badge = document.getElementById('warBadge').value.trim() || 'COMBATE';
+            const details = document.getElementById('warDetails').value.trim();
+
+            if (!title || !details) return alert('Ingresa título y detalles');
+            warsData.unshift({ id: Date.now(), title, badge: badge.toUpperCase(), details, date: new Date().toLocaleDateString() });
+            localStorage.setItem('oldgen_wars', JSON.stringify(warsData));
+
+            document.getElementById('warTitle').value = '';
+            document.getElementById('warBadge').value = '';
+            document.getElementById('warDetails').value = '';
+            closeModal('modalAdminPanel');
+            renderWars();
+        }
+
+        function addMember() {
+            playClickSound();
+            const name = document.getElementById('memberName').value.trim();
+            const role = document.getElementById('memberRole').value.trim() || 'Guerrero';
+            const imgUrl = document.getElementById('memberImgUrl').value.trim();
+            const country = document.getElementById('memberCountry').value.trim() || 'Global';
+            const tier = document.getElementById('memberTier').value.trim() || 'NethPot';
+            const joinDate = document.getElementById('memberJoinDate').value.trim() || 'Reciente';
+            const description = document.getElementById('memberDescription').value.trim() || 'Sin descripción.';
+
+            const tiktok = document.getElementById('memberTikTok').value.trim();
+            const instagram = document.getElementById('memberInstagram').value.trim();
+            const youtube = document.getElementById('memberYouTube').value.trim();
+
+            if (!name) return alert('Ingresa el nombre del jugador');
+
+            rosterData.push({ 
+                id: Date.now(), name, role, imgUrl, country, tier, joinDate, description, tiktok, instagram, youtube, rank: null 
+            });
+
+            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberRole').value = '';
+            document.getElementById('memberImgUrl').value = '';
+            document.getElementById('memberCountry').value = '';
+            document.getElementById('memberTier').value = '';
+            document.getElementById('memberJoinDate').value = '';
+            document.getElementById('memberDescription').value = '';
+            document.getElementById('memberTikTok').value = '';
+            document.getElementById('memberInstagram').value = '';
+            document.getElementById('memberYouTube').value = '';
+
+            closeModal('modalAdminPanel');
+            renderRoster();
+            renderRanking();
+        }
+
+        function assignRanking() {
+            playClickSound();
+            const selectedId = parseInt(document.getElementById('rankingMemberSelect').value);
+            const pos = parseInt(document.getElementById('rankingPosition').value);
+
+            if (!selectedId || isNaN(pos)) return alert('Selecciona un miembro y una posición válida');
+
+            rosterData.forEach(player => {
+                if (player.id === selectedId) {
+                    player.rank = pos;
+                }
+            });
+
+            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+            closeModal('modalAdminPanel');
+            renderRoster();
+            renderRanking();
+        }
+
+        function deletePost(id) {
+            playClickSound();
+            postsData = postsData.filter(p => p.id !== id);
+            localStorage.setItem('oldgen_posts', JSON.stringify(postsData));
+            renderPosts();
+        }
+
+        function deleteWar(id) {
+            playClickSound();
+            warsData = warsData.filter(w => w.id !== id);
+            localStorage.setItem('oldgen_wars', JSON.stringify(warsData));
+            renderWars();
+        }
+
+        function deleteMember(id) {
+            playClickSound();
+            rosterData = rosterData.filter(m => m.id !== id);
+            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+            renderRoster();
+            renderRanking();
+        }
+
+        // INICIALIZACIÓN
+        renderMarquee();
+        renderPosts();
+        renderWars();
+        renderRoster();
+        renderRanking();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
