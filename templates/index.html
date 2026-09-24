@@ -1559,19 +1559,26 @@
         }
 
         function deleteMember(id) {
-            playClickSound();
             rosterData = rosterData.filter(m => m.id !== id);
             localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
             renderRoster();
             renderRanking();
         }
 
-        // INICIALIZACIÓN
-        renderMarquee();
-        renderPosts();
-        renderWars();
-        renderRoster();
-        renderRanking();
+        // --- INICIALIZACIÓN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMarquee();
+            renderPosts();
+            renderWars();
+            renderRoster();
+            renderRanking();
+            document.getElementById('marqueeInput').value = marqueeItems.join(' | ');
+        });
+    </script>
+
+    <!-- ICONOS DE LUCIDE -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
         lucide.createIcons();
     </script>
 </body>
