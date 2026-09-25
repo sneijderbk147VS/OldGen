@@ -1503,11 +1503,7 @@
 
             if (!name) return alert('Ingresa el nombre del jugador');
 
-            rosterData.push({ 
-                id: Date.now(), name, role, imgUrl, country, tier, joinDate, description, tiktok, instagram, youtube, rank: null 
-            });
-
-            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+            saveMemberToServer({ name, role, imgUrl, country, tier, joinDate, description, tiktok, instagram, youtube });
 
             document.getElementById('memberName').value = '';
             document.getElementById('memberRole').value = '';
@@ -1564,7 +1560,44 @@
             renderRoster();
             renderRanking();
         }
+// Cargar miembros desde la base de datos PostgreSQL
+async function loadMembers() {
+    try {
+        const response = await fetch('/api/members');
+        const data = await response.json();
+        if (typeof rosterData !== 'undefined') {
+            rosterData = data;
+        }
+        if (typeof renderRoster === 'function') renderRoster();
+        if (typeof renderRanking === 'function') renderRanking();
+    } catch (error) {
+        console.error('Error cargando miembros:', error);
+    }
+}
 
+// Guardar un nuevo miembro en la base de datos
+async function saveMemberToServer(memberData) {
+    try {
+        await fetch('/api/members', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(memberData)
+        });
+        await loadMembers();
+    } catch (error) {
+        console.error('Error guardando miembro:', error);
+    }
+}
+
+// Eliminar un miembro
+async function deleteMemberFromServer(id) {
+    try {
+        await fetch(`/api/members/${id}`, { method: 'DELETE' });
+        await loadMembers();
+    } catch (error) {
+        console.error('Error eliminando miembro:', error);
+    }
+}
         // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', () => {
             renderMarquee();
