@@ -4,9 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# Conexión con la base de datos PostgreSQL en Render
-db_url = os.environ.get('DATABASE_URL', 'sqlite:///local.db')
-if db_url and db_url.startswith("postgres://"):
+# Obtener la URL de la base de datos desde las variables de entorno de Render
+db_url = os.environ.get('DATABASE_URL')
+
+# Si no encuentra la variable en Render, usa una base de datos local temporal en SQLite
+if not db_url:
+    db_url = 'sqlite:///local.db'
+elif db_url.startswith("postgres://"):
+    # SQLAlchemy requiere que empiece con "postgresql://" en lugar de "postgres://"
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
