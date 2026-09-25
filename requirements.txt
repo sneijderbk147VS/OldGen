@@ -1,6 +1,4 @@
 Flask
 gunicorn
-streamlit
-fpdf2
 Flask-SQLAlchemy
-psycopg2-binary
+psycopg[binary]
