@@ -83,6 +83,45 @@ def delete_member(member_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    tag = db.Column(db.String(50), default="ANUNCIO")
+    content = db.Column(db.Text, nullable=False)
+    date = db.Column(db.String(50), default="")
+    image = db.Column(db.Text, default="")
 
+@app.route('/api/posts', methods=['GET'])
+def get_posts():
+    try:
+        posts = Post.query.order_by(Post.id.desc()).all()
+        return jsonify([{
+            'id': p.id,
+            'title': p.title,
+            'tag': p.tag,
+            'content': p.content,
+            'date': p.date,
+            'image': p.image
+        } for p in posts])
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/posts', methods=['POST'])
+def add_post():
+    try:
+        data = request.json or {}
+        new_post = Post(
+            title=data.get('title'),
+            tag=data.get('tag', 'ANUNCIO'),
+            content=data.get('content'),
+            date=data.get('date', ''),
+            image=data.get('image', '')
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({'message': 'Publicación guardada', 'id': new_post.id}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True)
