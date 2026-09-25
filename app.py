@@ -4,10 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# Conexión con la base de datos de Render
+# Obtener URL de entorno
 db_url = os.environ.get('DATABASE_URL', 'sqlite:///local.db')
 
-# Aseguramos el formato que entiende SQLAlchemy
+# Asegurar protocolo postgresql://
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
