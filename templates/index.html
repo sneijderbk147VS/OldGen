@@ -999,7 +999,7 @@
             </div>
 
             <!-- 3. PUBLICAR CLAN WAR -->
-            <div>
+            <div style="border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
                 <h4 class="font-pvp" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.8rem;">3. REGISTRAR CLAN WAR</h4>
                 <div class="form-group">
                     <label>Enfrentamiento</label>
@@ -1014,6 +1014,66 @@
                     <textarea id="warDetails" class="form-control" rows="2" placeholder="Resumen..."></textarea>
                 </div>
                 <button class="btn-action font-pvp" style="font-size: 0.8rem; background: var(--green-neon); color: #000;" onclick="addWar()">REGISTRAR COMBATE</button>
+            </div>
+
+            <!-- 4. AGREGAR JUGADOR AL ROSTER -->
+            <div style="border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.8rem;">4. AGREGAR MIEMBRO AL ROSTER</h4>
+                <div class="form-group">
+                    <label>Nick / Nombre de Minecraft</label>
+                    <input type="text" id="memberName" class="form-control" placeholder="Ej: Black_All">
+                </div>
+                <div class="form-group">
+                    <label>Rol en el Clan</label>
+                    <input type="text" id="memberRole" class="form-control" placeholder="Ej: LIDER, Staff, Guerrero">
+                </div>
+                <div class="form-group">
+                    <label>Link Foto Personal (Opcional - solo Roster)</label>
+                    <input type="text" id="memberImgUrl" class="form-control" placeholder="URL de la imagen (https://...)">
+                </div>
+                <div class="form-group">
+                    <label>País</label>
+                    <input type="text" id="memberCountry" class="form-control" placeholder="Ej: Perú, México">
+                </div>
+                <div class="form-group">
+                    <label>Tier PvP</label>
+                    <input type="text" id="memberTier" class="form-control" placeholder="Ej: HT4/LT3, NethPot">
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Ingreso</label>
+                    <input type="text" id="memberJoinDate" class="form-control" placeholder="Ej: Enero 2026">
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="memberDescription" class="form-control" rows="2" placeholder="Notas..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="color: #00f2fe;">TikTok URL</label>
+                    <input type="text" id="memberTikTok" class="form-control" placeholder="https://tiktok.com/@...">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--pink-bright);">Instagram URL</label>
+                    <input type="text" id="memberInstagram" class="form-control" placeholder="https://instagram.com/...">
+                </div>
+                <div class="form-group">
+                    <label style="color: #ff2a2a;">YouTube URL</label>
+                    <input type="text" id="memberYouTube" class="form-control" placeholder="https://youtube.com/@...">
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem;" onclick="addMember()">AGREGAR AL ROSTER</button>
+            </div>
+
+            <!-- 5. TOP RANKING PVP -->
+            <div>
+                <h4 class="font-pvp" style="font-size: 0.8rem; color: var(--yellow-neon); margin-bottom: 0.8rem;">5. ASIGNAR A TOP RANKING PVP</h4>
+                <div class="form-group">
+                    <label>Seleccionar Miembro</label>
+                    <select id="rankingMemberSelect" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label>Posición en el Top (Ej: 1, 2, 3)</label>
+                    <input type="number" id="rankingPosition" class="form-control" placeholder="Ej: 1">
+                </div>
+                <button class="btn-action font-pvp" style="font-size: 0.8rem; background: var(--yellow-neon); color: #000;" onclick="assignRanking()">ASIGNAR A TOP RANKING</button>
             </div>
         </div>
     </div>
@@ -1047,7 +1107,11 @@
         }
 
         function playClickSound() {
-
+            clickAudio.currentTime = 0;
+            const playPromise = clickAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => playSynthClick());
+            }
         }
 
         // --- CANVAS PARTICULAS NEÓN ---
@@ -1098,58 +1162,11 @@
         }
         animateParticles();
 
-        // --- DATOS DEL ROSTER Y TOP RANKING (MANEJO POR PROGRAMACIÓN) ---
-        // Aquí puedes agregar, editar o eliminar miembros directamente en el código:
-        let rosterData = [
-            { 
-                id: 1, 
-                name: "Black_AllOF", 
-                role: "LIDER", 
-                country: "Perú", 
-                tier: "HT4/LT3", 
-                joinDate: "20-09-2026", 
-                description: "LIDER OFICIAL DEL CLAN.", 
-                rank: 1, 
-                imgUrl: "", 
-                tiktok: "https://www.tiktok.com/@black_allof", 
-                instagram: "https://www.instagram.com/black_allof?stkn=aDNwNDRtdzU4ZGlk", 
-                youtube: "https://www.youtube.com/@Black_All32" 
-            },
-            { 
-                id: 2, 
-                name: "sneijderbk147", 
-                role: "Builder", 
-                country: "Perú", 
-                tier: "-", 
-                joinDate: "25-09-2026", 
-                description: "Vive la vida.", 
-                rank: , 
-                imgUrl: "", 
-                tiktok: "https://www.instagram.com/sneijderbk147/", 
-                instagram: "", 
-                youtube: "" 
-            },
-            { 
-                id: 3, 
-                name: "Jugador123454", 
-                role: "Farmer", 
-                country: "México", 
-                tier: "NethPot", 
-                joinDate: "Marzo 2026", 
-                description: "Especialista en logística e inventario.", 
-                rank: 3, 
-                imgUrl: "", 
-                tiktok: "", 
-                instagram: "", 
-                youtube: "" 
-            }
-            // Para agregar un jugador nuevo, simplemente copia un bloque de arriba y ponlo aquí.
-        ];
-
+        // --- DATOS LOCALSTORAGE ---
         let marqueeItems = JSON.parse(localStorage.getItem('oldgen_marquee')) || [
             "★ CLAN OLDGEN PVP ★",
-            "⚡ PROXIMAMENTE RECLUTAMIENTO ACTIVO VÍA DISCORD ⚡",
-            "⚔ PROXIMAMENTE DOMINANDO EL TOP RANKING PVP ⚔"
+            "⚡ RECLUTAMIENTO ACTIVO VÍA DISCORD ⚡",
+            "⚔ DOMINANDO EL TOP RANKING PVP ⚔"
         ];
 
         let postsData = JSON.parse(localStorage.getItem('oldgen_posts')) || [
@@ -1159,6 +1176,12 @@
 
         let warsData = JSON.parse(localStorage.getItem('oldgen_wars')) || [
             { id: 1, title: "OldGen vs Rival PvP", badge: "VICTORIA (5 - 1)", details: "Dominio táctico en la arena principal.", date: "Reciente" }
+        ];
+
+        let rosterData = JSON.parse(localStorage.getItem('oldgen_roster')) || [
+            { id: 1, name: "Black_All", role: "LIDER", country: "Perú", tier: "HT4/LT3", joinDate: "Enero 2025", description: "Líder y estratega principal del clan OldGen.", rank: 1, imgUrl: "", tiktok: "https://tiktok.com", instagram: "https://instagram.com", youtube: "https://youtube.com" },
+            { id: 2, name: "sneijderbk147", role: "Builder", country: "Argentina", tier: "Sword", joinDate: "Mayo 2025", description: "Diseñador de defensas y estructuras del clan.", rank: 2, imgUrl: "", tiktok: "", instagram: "", youtube: "" },
+            { id: 3, name: "Jugador123454", role: "Farmer", country: "México", tier: "NethPot", joinDate: "Marzo 2026", description: "Especialista en logística e inventario.", rank: 3, imgUrl: "", tiktok: "", instagram: "", youtube: "" }
         ];
 
         let currentFilter = 'todos';
@@ -1261,9 +1284,12 @@
                     <div class="player-name">${player.name}</div>
                     <div class="player-role">${player.role}</div>
                     <span class="click-hint font-pvp">VER PERFIL ▲</span>
+                    ${isAdmin ? `<br><button class="btn-delete font-pvp" onclick="event.stopPropagation(); deleteMember(${player.id})">ELIMINAR</button>` : ''}
                 `;
                 container.appendChild(card);
             });
+
+            updateRankingSelect();
         }
 
         function renderRanking() {
@@ -1321,6 +1347,18 @@
             });
         }
 
+        function updateRankingSelect() {
+            const select = document.getElementById('rankingMemberSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            rosterData.forEach(player => {
+                const opt = document.createElement('option');
+                opt.value = player.id;
+                opt.textContent = `${player.name} (${player.role})`;
+                select.appendChild(opt);
+            });
+        }
+
         function openSkinModal(name, role, imgSrc, country, tier, joinDate, description, tiktok, instagram, youtube) {
             document.getElementById('skinModalName').innerText = name;
             document.getElementById('skinModalRole').innerText = role;
@@ -1363,6 +1401,7 @@
             if (isAdmin) {
                 document.getElementById('modalAdminPanel').style.display = 'flex';
                 document.getElementById('marqueeInput').value = marqueeItems.join(' | ');
+                updateRankingSelect();
             } else {
                 document.getElementById('modalAuth').style.display = 'flex';
             }
@@ -1449,6 +1488,63 @@
             renderWars();
         }
 
+        function addMember() {
+            playClickSound();
+            const name = document.getElementById('memberName').value.trim();
+            const role = document.getElementById('memberRole').value.trim() || 'Guerrero';
+            const imgUrl = document.getElementById('memberImgUrl').value.trim();
+            const country = document.getElementById('memberCountry').value.trim() || 'Global';
+            const tier = document.getElementById('memberTier').value.trim() || 'NethPot';
+            const joinDate = document.getElementById('memberJoinDate').value.trim() || 'Reciente';
+            const description = document.getElementById('memberDescription').value.trim() || 'Sin descripción.';
+
+            const tiktok = document.getElementById('memberTikTok').value.trim();
+            const instagram = document.getElementById('memberInstagram').value.trim();
+            const youtube = document.getElementById('memberYouTube').value.trim();
+
+            if (!name) return alert('Ingresa el nombre del jugador');
+
+            rosterData.push({ 
+                id: Date.now(), name, role, imgUrl, country, tier, joinDate, description, tiktok, instagram, youtube, rank: null 
+            });
+
+            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberRole').value = '';
+            document.getElementById('memberImgUrl').value = '';
+            document.getElementById('memberCountry').value = '';
+            document.getElementById('memberTier').value = '';
+            document.getElementById('memberJoinDate').value = '';
+            document.getElementById('memberDescription').value = '';
+            document.getElementById('memberTikTok').value = '';
+            document.getElementById('memberInstagram').value = '';
+            document.getElementById('memberYouTube').value = '';
+
+            closeModal('modalAdminPanel');
+            renderRoster();
+            renderRanking();
+        }
+
+        function assignRanking() {
+            playClickSound();
+            const selectedId = parseInt(document.getElementById('rankingMemberSelect').value);
+            const pos = parseInt(document.getElementById('rankingPosition').value);
+
+            if (!selectedId || isNaN(pos)) return alert('Selecciona un miembro y una posición válida');
+
+            rosterData.forEach(player => {
+                if (player.id === selectedId) {
+                    player.rank = pos;
+                }
+            });
+
+            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+            closeModal('modalAdminPanel');
+            renderRoster();
+            renderRanking();
+        }
+
         function deletePost(id) {
             playClickSound();
             postsData = postsData.filter(p => p.id !== id);
@@ -1461,6 +1557,14 @@
             warsData = warsData.filter(w => w.id !== id);
             localStorage.setItem('oldgen_wars', JSON.stringify(warsData));
             renderWars();
+        }
+
+        function deleteMember(id) {
+            playClickSound();
+            rosterData = rosterData.filter(m => m.id !== id);
+            localStorage.setItem('oldgen_roster', JSON.stringify(rosterData));
+            renderRoster();
+            renderRanking();
         }
 
         // INICIALIZACIÓN
